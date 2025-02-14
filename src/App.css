@@ -1,0 +1,67 @@
+.outline-black-price {
+  color: white;
+  text-shadow: black 0px 0px 2px;
+}
+details summary {
+  list-style: none; /* Oculta el icono nativo */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding-right: 35px; /* Espacio para el icono */
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::after {
+  content: "▾";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #77b7ad;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 4px;
+  border-radius: 999px;
+  border: 2px solid #77b7ad;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+details[open] summary::after {
+  content: "▴";
+}
+
+.my-toast {
+  background: rgb(216, 147, 21);
+  color: white;
+  padding: 10px 40px;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 24px;
+  opacity: 1;
+  font-weight: 900;
+  font-family: "Oswald", serif;
+  cursor: pointer;
+  transition: opacity 0.5s ease-in-out;
+}
+.my-toast-blue {
+  background: #359496;
+  color: white;
+  padding: 10px 40px;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 24px;
+  opacity: 1;
+  font-weight: 900;
+  font-family: "Oswald", serif;
+  cursor: pointer;
+  transition: opacity 0.5s ease-in-out;
+}

@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@theme {
+  --color-cheese: #d89315;
+  --color-sky-low: #8bd7dc;
+  --color-sky-high: #359496;
+  --color-sky-medium: #77b7ad;
+  --font-pacifico: "Pacifico", serif;
+  --font-oswald: "Oswald", serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #222;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #d89315; /* Dark grey color for the scrollbar thumb */
+  border-radius: 10px; /* Rounds the edges of the scrollbar */
+  border: 1px solid transparent; /* Adds space around the thumb */
+  background-clip: content-box;
+}

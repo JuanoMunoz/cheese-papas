@@ -1,0 +1,131 @@
+{
+    "mandingas": [
+        {
+            "id": 1,
+            "nombre": "Mandipollo",
+            "precio": 24000,
+            "descripcion": "Mandingas con 150 gramos de pollo, maicitos, quezo mozzarella y 2 chorizos cocteleros.",
+            "img": "/mandi1.png"
+        },
+        {
+            "id": 2,
+            "nombre": "MaxiLongui",
+            "precio": 20000,
+            "descripcion": "Mandingas con una Longaniza en su salsa, maicitos, quezo mozzarella y 2 huevos de codorniz.",
+            "img": "/mandi2.jpg"
+        },
+        {
+            "id": 3,
+            "nombre": "Papersonal",
+            "precio": 9000,
+            "descripcion": "200 gramos de papa con queso mozarella y nuestras salsas.",
+            "img": "/mandi3.jpg"
+        },
+        {
+            "id": 4,
+            "nombre": "Ropa guardada",
+            "precio": 22000,
+            "descripcion": "Mandingas con 150 gramos de carne desmechada estilo ropa vieja, maicitos, quezo mozzarella y 2 chorizos cocteleros.",
+            "img": "/mandi4.jpg"
+        },
+        {
+            "id": 5,
+            "nombre": "Mandi-Bombon",
+            "precio": 19000,
+            "descripcion": "Mandingas con bombón de pollo frito, maicitos, quezo mozzarella y arepa frita.",
+            "img": "/mandi5.jpeg"
+        },
+        {
+            "id": 6,
+            "nombre": "La mixta",
+            "precio": 27000,
+            "descripcion": "Mandingas con 150 gramos de pollo, 150 gramos de carne desmechada, maicitos, quezo mozzarella, 2 chorizos cocteleros, 1 huevo de codorniz y arepa frita.",
+            "img": "/papersonal.png"
+        }
+    ],
+    "salsas": [
+        "Salsa rosada",
+        "Salsa BBQ",
+        "Salsa piña",
+        "Salsa maíz",
+        "Salsa de ajo"
+    ],
+    "adiciones": [
+        {
+            "id": 1,
+            "nombre": "tocineta",
+            "precio": 2000
+        },
+        {
+            "id": 2,
+            "nombre": "mozzarella",
+            "precio": 2000
+        },
+        {
+            "id": 3,
+            "nombre": "maicitos",
+            "precio": 3000
+        },
+        {
+            "id": 4,
+            "nombre": "huevo codorniz",
+            "precio": 2500
+        }
+    ],
+    "bebidas": [
+        {
+            "id": 1,
+            "nombre": "Coca cola 1.5l",
+            "precio": 8500,
+            "img": "/cocaunocinco.png"
+        },
+        {
+            "id": 2,
+            "nombre": "Manzana postobon 1.5l",
+            "precio": 8500,
+            "img": "/manzana15.webp"
+        },
+        {
+            "id": 3,
+            "nombre": "Uva postobon 1.5l ",
+            "precio": 8500,
+            "img": "/uvaunocinco.jpg"
+        },
+        {
+            "id": 4,
+            "nombre": "Colombiana 1.5l",
+            "precio": 8500,
+            "img": "/colombiana15.webp"
+        },
+        {
+            "id": 5,
+            "nombre": "Pepsi 1l",
+            "precio": 5000,
+            "img": "/pepsilitro.webp"
+        },
+        {
+            "id": 6,
+            "nombre": "Coca cola 400ml",
+            "precio": 3900,
+            "img": "/cocacuatrocientos.webp"
+        },
+        {
+            "id": 7,
+            "nombre": "Uva postobon 400ml",
+            "precio": 3900,
+            "img": "/uva400.webp"
+        },
+        {
+            "id": 8,
+            "nombre": "Manzana postobon 400ml",
+            "precio": 3900,
+            "img": "/manzan400.webp"
+        },
+        {
+            "id": 9,
+            "nombre": "Colombiana 400ml",
+            "precio": 3900,
+            "img": "colombiana400.webp"
+        }
+    ]
+}
