@@ -293,7 +293,7 @@ function App() {
             </div>
             <button
               onClick={() => validateAddress()}
-              className="w-[95%] bg-sky-high text-white py-3 rounded-md font-semibold hover:bg-sky-low cursor-pointer transition-all self-center"
+              className="w-[95%] bg-sky-high text-white pt-3 mb-10 lg:mb-3 pb-3 rounded-md font-semibold hover:bg-sky-low cursor-pointer transition-all self-center"
             >
               Agregar dirección
             </button>
