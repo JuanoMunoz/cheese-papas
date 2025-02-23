@@ -90,7 +90,7 @@ function App() {
     mensaje += "------------------------------------\n";
     mensaje += `*Total del pedido:* ${numberToCOP(total)} COP.\n\n`;
     mensaje += "Por favor, confírmame la disponibilidad. ¡Gracias! 😊";
-    const numero = "573003232268";
+    const numero = "573103967137";
     const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
     window.location.href = url;
     console.log(mensaje);

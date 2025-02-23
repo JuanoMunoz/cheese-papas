@@ -47,29 +47,43 @@
         "Salsa rosada",
         "Salsa BBQ",
         "Salsa piña",
-        "Salsa maíz",
-        "Salsa de ajo"
+        "Salsa tártara"
     ],
     "adiciones": [
         {
             "id": 1,
-            "nombre": "tocineta",
-            "precio": 2000
+            "nombre": "pulled pork",
+            "precio": 7000
         },
         {
             "id": 2,
+            "nombre": "pollo",
+            "precio": 4000
+        },
+        {
+            "id": 3,
             "nombre": "mozzarella",
             "precio": 2000
         },
         {
-            "id": 3,
-            "nombre": "maicitos",
-            "precio": 3000
+            "id": 4,
+            "nombre": "salchicha",
+            "precio": 2000
         },
         {
-            "id": 4,
-            "nombre": "huevo codorniz",
-            "precio": 2500
+            "id": 5,
+            "nombre": "guacamole",
+            "precio": 2000
+        },
+        {
+            "id": 6,
+            "nombre": "pico de gallo",
+            "precio": 1000
+        },
+        {
+            "id": 7,
+            "nombre": "maicitos",
+            "precio": 2000
         }
     ],
     "bebidas": [
