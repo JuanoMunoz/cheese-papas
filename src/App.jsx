@@ -50,6 +50,7 @@ function App() {
       toast("¡Dirección agregada con éxito!", {
         className: "my-toast",
         position: "top-right",
+        duration: 1500,
       });
       setIsAddressModalActive(false);
       setIsAddressSet(true);

@@ -2,44 +2,65 @@
     "mandingas": [
         {
             "id": 1,
-            "nombre": "Mandipollo",
-            "precio": 24000,
-            "descripcion": "Mandingas con 150 gramos de pollo, maicitos, quezo mozzarella y 2 chorizos cocteleros.",
-            "img": "/mandi1.png"
+            "nombre": "Las de la casa",
+            "precio": 28000,
+            "descripcion": "Papas, queso mozarella, salchichas, carne tipo pulled pork, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección. Ideal para dos personas",
+            "img": "/mandi1.jpg"
         },
         {
             "id": 2,
-            "nombre": "MaxiLongui",
-            "precio": 20000,
-            "descripcion": "Mandingas con una Longaniza en su salsa, maicitos, quezo mozzarella y 2 huevos de codorniz.",
+            "nombre": "Las de la casa (personal) ",
+            "precio": 15000,
+            "descripcion": "Papas, salchichas, carne tipo pulled pork, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi2.jpg"
         },
         {
             "id": 3,
-            "nombre": "Papersonal",
-            "precio": 9000,
-            "descripcion": "200 gramos de papa con queso mozarella y nuestras salsas.",
+            "nombre": "Las rancheritas",
+            "precio": 15000,
+            "descripcion": "Papas, queso mozarella, salchichas, maicitos, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi3.jpg"
         },
         {
             "id": 4,
-            "nombre": "Ropa guardada",
-            "precio": 22000,
-            "descripcion": "Mandingas con 150 gramos de carne desmechada estilo ropa vieja, maicitos, quezo mozzarella y 2 chorizos cocteleros.",
+            "nombre": "Las salcheese-papas",
+            "precio": 18000,
+            "descripcion": "Papas, queso mozarella, salchichas y salsas a tu elección.",
             "img": "/mandi4.jpg"
         },
         {
             "id": 5,
-            "nombre": "Mandi-Bombon",
-            "precio": 19000,
-            "descripcion": "Mandingas con bombón de pollo frito, maicitos, quezo mozzarella y arepa frita.",
-            "img": "/mandi5.jpeg"
+            "nombre": "Las salcheese-papas (personal)",
+            "precio": 10000,
+            "descripcion": "Papas, queso mozarella, salchichas y salsas a tu elección.",
+            "img": "/mandi5.jpg"
         },
         {
             "id": 6,
-            "nombre": "La mixta",
+            "nombre": "Solo pollo",
             "precio": 27000,
-            "descripcion": "Mandingas con 150 gramos de pollo, 150 gramos de carne desmechada, maicitos, quezo mozzarella, 2 chorizos cocteleros, 1 huevo de codorniz y arepa frita.",
+            "descripcion": "Papas, salchichas, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
+            "img": "/mandi6.jpg"
+        },
+        {
+            "id": 7,
+            "nombre": "Solo pulled",
+            "precio": 28000,
+            "descripcion": "Papas, salchichas, carne tipo pulled pork, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
+            "img": "/mandi7.jpg"
+        },
+        {
+            "id": 8,
+            "nombre": "Maduritas",
+            "precio": 26000,
+            "descripcion": "Papas, salchichas, madurito en cubitos, queso mozarella, maicitos, tocineta caramelizada y salsas a tu elección. Ideal para 2",
+            "img": "/papersonal.png"
+        },
+        {
+            "id": 9,
+            "nombre": "Maduritas (personal)",
+            "precio": 15000,
+            "descripcion": "Papas, salchichas, madurito en cubitos, queso mozarella, maicitos, tocineta caramelizada y salsas a tu elección.",
             "img": "/papersonal.png"
         }
     ],
