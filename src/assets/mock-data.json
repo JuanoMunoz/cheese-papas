@@ -68,12 +68,12 @@
             "nombre": "Las costeñas (personal)",
             "precio": 16000,
             "descripcion": "Papá, lechuga, chorizo, butifarra, pechuga salteada, salchicha, queso costeño, ripio de papa, maicitos y salsas a tu elección.",
-            "img": "/mandi8.jpg"
+            "img": "/mandi9.jpg"
         },
         {
             "id": 11,
             "nombre": "Las costeñas",
-            "precio": 30000,
+            "precio": 32000,
             "descripcion": "Papá, lechuga, chorizo, butifarra, pechuga salteada, salchicha, queso costeño, ripio de papa, maicitos y salsas a tu elección. Ideal para 2",
             "img": "/mandi8.jpg"
         }
