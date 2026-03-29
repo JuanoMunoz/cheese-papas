@@ -4,14 +4,14 @@
             "id": 1,
             "nombre": "Las de la casa",
             "precio": 28000,
-            "descripcion": "Papas, queso mozarella, salchichas, carne tipo pulled pork, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección. Ideal para dos personas",
+            "descripcion": "Papas, queso mozarella, salchichas, carne tipo pulled pork, pollo, guacamole, tocineta caramelizada y salsas a tu elección. Ideal para dos personas",
             "img": "/mandi1.jpg"
         },
         {
             "id": 2,
             "nombre": "Las de la casa (personal) ",
             "precio": 15000,
-            "descripcion": "Papas, salchichas, carne tipo pulled pork, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
+            "descripcion": "Papas, salchichas, carne tipo pulled pork, pollo, guacamole, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi2.jpg"
         },
         {
@@ -39,14 +39,14 @@
             "id": 6,
             "nombre": "Solo pollo",
             "precio": 27000,
-            "descripcion": "Papas, salchichas, pollo, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
+            "descripcion": "Papas, salchichas, pollo, guacamole, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi6.jpg"
         },
         {
             "id": 7,
             "nombre": "Solo pulled",
             "precio": 30000,
-            "descripcion": "Papas, salchichas, carne tipo pulled pork, guacamole, pico de gallo, tocineta caramelizada y salsas a tu elección.",
+            "descripcion": "Papas, salchichas, carne tipo pulled pork, guacamole, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi7.jpg"
         },
         {
@@ -109,11 +109,6 @@
             "id": 5,
             "nombre": "guacamole",
             "precio": 2000
-        },
-        {
-            "id": 6,
-            "nombre": "pico de gallo",
-            "precio": 1000
         },
         {
             "id": 7,

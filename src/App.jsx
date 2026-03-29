@@ -3,12 +3,14 @@ import Modal from "./components/Modal";
 import FloatButton from "./components/FloatButton";
 import data from "./assets/mock-data.json";
 import { useEffect, useState } from "react";
-import { Cart, CartHeading, Close, Trash, House } from "./components/SVG";
+import { Cart, CartHeading, Close, Trash, House, Location } from "./components/SVG";
 import Header from "./components/Header";
 import CarrouselProducts from "./components/CarrouselProducts";
 import Bento from "./components/BentoDump";
 import { numberToCOP } from "./constants/constants";
 import toast from "react-simple-toasts";
+import Login from "./components/Login";
+import Admin from "./components/Admin";
 function App() {
   const [isFriesSection, setIsFriesSection] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,9 +19,14 @@ function App() {
   const [isAddressSet, setIsAddressSet] = useState(false);
   const [address, setAddress] = useState({ direccion: "", optional: "" });
   const [activeProduct, setActiveProduct] = useState(null);
+  const [isLocating, setIsLocating] = useState(false);
   const [total, setTotal] = useState(0);
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart")) || []
+  );
+  const [currentView, setCurrentView] = useState("home");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    JSON.parse(localStorage.getItem("isAdmin")) || false
   );
   const closeModal = () => {
     setIsModalOpen(false);
@@ -96,6 +103,64 @@ function App() {
     window.location.href = url;
     console.log(mensaje);
   };
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isAdmin", "true");
+    setCurrentView("admin");
+  };
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("isAdmin");
+    setCurrentView("home");
+  };
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast("Tu navegador no soporta geolocalización.", {
+        className: "my-toast-blue",
+      });
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+          );
+          const data = await response.json();
+          if (data.display_name) {
+            setAddress((prev) => ({ ...prev, direccion: data.display_name }));
+            toast("¡Ubicación cargada!", {
+              className: "my-toast",
+              duration: 1500,
+            });
+          } else {
+            setAddress((prev) => ({
+              ...prev,
+              direccion: `${latitude}, ${longitude}`,
+            }));
+          }
+        } catch (error) {
+          toast("Error al obtener dirección", { className: "my-toast-blue" });
+          setAddress((prev) => ({
+            ...prev,
+            direccion: `${latitude}, ${longitude}`,
+          }));
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        toast("Permiso de ubicación denegado.", { className: "my-toast-blue" });
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  };
+
   const removeItemCart = (id) => {
     setCart((prev) => prev.filter((product) => product.cartId !== id));
   };
@@ -109,6 +174,27 @@ function App() {
       cart.reduce((partialSum, product) => partialSum + product.total, 0)
     );
   }, [cart]);
+
+  if (currentView === "login") {
+    return (
+      <Login onLogin={handleLogin} onBack={() => setCurrentView("home")} />
+    );
+  }
+
+  if (currentView === "admin") {
+    if (!isLoggedIn) {
+      setCurrentView("login");
+      return null;
+    }
+    return (
+      <Admin
+        initialData={data}
+        onLogout={handleLogout}
+        onBack={() => setCurrentView("home")}
+      />
+    );
+  }
+
   return (
     <>
       <Header></Header>
@@ -138,6 +224,12 @@ function App() {
         <Bento></Bento>
         <footer className="bg-black text-center font-black font-oswald text-gray-200 py-5">
           Made with ❤️ by Juano
+          <button
+            onClick={() => setCurrentView(isLoggedIn ? "admin" : "login")}
+            className="text-gray-600 transition-colors duration-200 hover:text-sky-high block mx-auto mt-4 text-[10px] uppercase tracking-[0.4em] cursor-pointer"
+          >
+            Administración
+          </button>
         </footer>
       </main>
       <button
@@ -272,7 +364,19 @@ function App() {
           <section className="flex h-full my-5 flex-col justify-center">
             <div className="flex grow mt-5 flex-col gap-14 p-4">
               <div className="flex flex-col gap-6">
-                <h3>Ingresa tu dirección</h3>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-oswald font-bold uppercase text-neutral-500 text-sm tracking-widest">
+                    Ingresa tu dirección
+                  </h3>
+                  <button
+                    onClick={getCurrentLocation}
+                    disabled={isLocating}
+                    className="flex items-center gap-2 text-sky-high hover:text-sky-low font-bold text-sm cursor-pointer transition-all disabled:opacity-50"
+                  >
+                    <Location size={20}></Location>
+                    {isLocating ? "Obteniendo..." : "Usar ubicación actual"}
+                  </button>
+                </div>
                 <input
                   type="text"
                   onChange={(e) => changeAddressInfo(e, "address")}
