@@ -4,7 +4,7 @@ Permite visualizar, añadir y eliminar elementos de las categorías: mandingas, 
 Incluye la funcionalidad de persistencia física mediante una llamada al endpoint /api/save-data.
 */
 import { useState } from "react";
-import { Trash, House, Edit } from "./SVG";
+import { Trash, House, Edit, Clipboard, Close } from "./SVG";
 import toast from "react-simple-toasts";
 
 const Admin = ({ initialData, onLogout, onBack }) => {
@@ -98,7 +98,7 @@ const Admin = ({ initialData, onLogout, onBack }) => {
       <main className="flex-1 p-4 lg:p-10 max-w-7xl mx-auto w-full">
         {/* Tabs */}
         <div className="flex flex-wrap bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden mb-8 p-1">
-          {["mandingas", "bebidas", "adiciones", "salsas"].map((tab) => (
+          {["mandingas", "bebidas", "adiciones", "salsas", "inventario"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -113,13 +113,45 @@ const Admin = ({ initialData, onLogout, onBack }) => {
 
         {/* Content area */}
         <section className="bg-white rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100 p-8 mb-24 anim-fade-in">
-           <AdminCategory
-            category={activeTab}
-            items={data[activeTab]}
-            onAdd={(newItem) => addItem(activeTab, newItem)}
-            onUpdate={(updatedItem) => updateItem(activeTab, updatedItem)}
-            onRemove={(id) => removeItem(activeTab, id)}
-          />
+           {activeTab === "inventario" ? (
+             <AdminInventory 
+                allProducts={data} 
+                onFinalizeDay={(dayTotal) => {
+                    const today = new Date().toLocaleDateString();
+                    const updatedData = {
+                        ...data,
+                        ventas_diarias: [
+                            ...(data.ventas_diarias || []),
+                            { fecha: today, total: dayTotal }
+                        ]
+                    };
+                    setData(updatedData);
+                    // Force save after state update
+                    setTimeout(async () => {
+                        try {
+                            const response = await fetch("/api/save-data", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(updatedData),
+                            });
+                            if (response.ok) {
+                                toast("¡Día finalizado y guardado en JSON!", { position: "top-right" });
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }, 100);
+                }}
+             />
+           ) : (
+             <AdminCategory
+              category={activeTab}
+              items={data[activeTab]}
+              onAdd={(newItem) => addItem(activeTab, newItem)}
+              onUpdate={(updatedItem) => updateItem(activeTab, updatedItem)}
+              onRemove={(id) => removeItem(activeTab, id)}
+            />
+           )}
         </section>
 
         {/* Save Floating Button */}
@@ -144,6 +176,273 @@ const Admin = ({ initialData, onLogout, onBack }) => {
       `}</style>
     </div>
   );
+};
+
+const AdminInventory = ({ allProducts, onFinalizeDay }) => {
+    const [orders, setOrders] = useState(() => {
+        const saved = localStorage.getItem('daily_orders');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    const [newOrder, setNewOrder] = useState({
+        cliente: '',
+        items: [],
+        nota: ''
+    });
+
+    const [selectedCategory, setSelectedCategory] = useState('mandingas');
+    const [selectedProduct, setSelectedProduct] = useState('');
+    const [quantity, setQuantity] = useState(1);
+
+    const categories = ['mandingas', 'bebidas', 'adiciones', 'salsas'];
+
+    const saveOrders = (updatedOrders) => {
+        setOrders(updatedOrders);
+        localStorage.setItem('daily_orders', JSON.stringify(updatedOrders));
+    };
+
+    const addItemToOrder = () => {
+        if (!selectedProduct) return;
+        
+        let product;
+        if (selectedCategory === 'salsas') {
+            product = { nombre: selectedProduct, precio: 0 };
+        } else {
+            product = (allProducts[selectedCategory] || []).find(p => p.nombre === selectedProduct);
+        }
+
+        if (!product) return;
+
+        const newItem = {
+            id: Date.now(),
+            nombre: product.nombre,
+            precio: product.precio || 0,
+            cantidad: Number(quantity),
+            categoria: selectedCategory
+        };
+
+        setNewOrder(prev => ({
+            ...prev,
+            items: [...prev.items, newItem]
+        }));
+        setSelectedProduct('');
+        setQuantity(1);
+    };
+
+    const removeItemFromOrder = (itemId) => {
+        setNewOrder(prev => ({
+            ...prev,
+            items: prev.items.filter(item => item.id !== itemId)
+        }));
+    };
+
+    const handleAddOrder = (e) => {
+        e.preventDefault();
+        if (newOrder.items.length === 0 || !newOrder.cliente) {
+            toast("Agrega al menos un producto y el nombre del cliente", { className: "my-toast-blue" });
+            return;
+        }
+
+        const orderTotal = newOrder.items.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+        const orderToAdd = {
+            ...newOrder,
+            id: Date.now(),
+            total: orderTotal,
+            fecha: new Date().toLocaleTimeString()
+        };
+
+        const updatedOrders = [...orders, orderToAdd];
+        saveOrders(updatedOrders);
+        setNewOrder({ cliente: '', items: [], nota: '' });
+        toast("Pedido guardado en inventario local");
+    };
+
+    const removeOrder = (orderId) => {
+        const updatedOrders = orders.filter(o => o.id !== orderId);
+        saveOrders(updatedOrders);
+    };
+
+    const finalizeDay = () => {
+        if (orders.length === 0) {
+            toast("No hay ventas para finalizar", { className: "my-toast-blue" });
+            return;
+        }
+
+        const dayTotal = orders.reduce((sum, order) => sum + order.total, 0);
+        onFinalizeDay(dayTotal);
+        saveOrders([]);
+        localStorage.removeItem('daily_orders');
+    };
+
+    return (
+        <div className="space-y-10">
+            <div className="flex justify-between items-end border-b border-neutral-100 pb-5">
+                <div className="flex items-center gap-4">
+                    <Clipboard size={40} className="text-cheese" />
+                    <h2 className="text-4xl font-pacifico text-cheese capitalize">Inventario de Ventas</h2>
+                </div>
+                <span className="text-neutral-400 font-oswald font-bold text-sm uppercase tracking-widest">{orders.length} pedidos hoy</span>
+            </div>
+
+            <div className="bg-neutral-50 p-8 rounded-2xl border border-neutral-200 shadow-inner">
+                <form onSubmit={handleAddOrder} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[10px] uppercase font-black tracking-widest text-neutral-400 ml-1">¿Quién pide?</label>
+                            <input
+                                placeholder="Nombre del cliente"
+                                className="p-3 bg-white border border-neutral-200 rounded-xl font-oswald outline-none focus:ring-2 focus:ring-sky-high/20 focus:border-sky-high transition-all"
+                                value={newOrder.cliente}
+                                onChange={(e) => setNewOrder({ ...newOrder, cliente: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-[10px] uppercase font-black tracking-widest text-neutral-400 ml-1">Nota del pedido</label>
+                            <input
+                                placeholder="Ej: Sin cebolla, extra picante..."
+                                className="p-3 bg-white border border-neutral-200 rounded-xl font-oswald outline-none focus:ring-2 focus:ring-sky-high/20 focus:border-sky-high transition-all"
+                                value={newOrder.nota}
+                                onChange={(e) => setNewOrder({ ...newOrder, nota: e.target.value })}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="p-5 bg-white rounded-xl border border-neutral-200 space-y-4">
+                        <p className="text-xs font-black uppercase tracking-widest text-neutral-500 border-b pb-2">Añadir Productos al pedido</p>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[10px] uppercase font-bold text-neutral-400">Categoría</label>
+                                <select 
+                                    className="p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg font-oswald text-sm outline-none"
+                                    value={selectedCategory}
+                                    onChange={(e) => { setSelectedCategory(e.target.value); setSelectedProduct(''); }}
+                                >
+                                    {categories.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
+                                </select>
+                            </div>
+                            <div className="flex flex-col gap-2 md:col-span-2">
+                                <label className="text-[10px] uppercase font-bold text-neutral-400">Producto</label>
+                                <select 
+                                    className="p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg font-oswald text-sm outline-none"
+                                    value={selectedProduct}
+                                    onChange={(e) => setSelectedProduct(e.target.value)}
+                                >
+                                    <option value="">Selecciona un producto...</option>
+                                    {selectedCategory === 'salsas' 
+                                        ? (allProducts.salsas || []).map((s, i) => <option key={i} value={s}>{s}</option>)
+                                        : (allProducts[selectedCategory] || []).map(p => <option key={p.id} value={p.nombre}>{p.nombre} - ${p.precio.toLocaleString()}</option>)
+                                    }
+                                </select>
+                            </div>
+                            <div className="flex gap-2">
+                                <div className="flex flex-col gap-2 w-20">
+                                    <label className="text-[10px] uppercase font-bold text-neutral-400">Cant.</label>
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        className="p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg font-oswald text-sm outline-none"
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(e.target.value)}
+                                    />
+                                </div>
+                                <button 
+                                    type="button"
+                                    onClick={addItemToOrder}
+                                    className="flex-1 bg-sky-high text-white font-black rounded-lg hover:bg-sky-low transition-all text-xs uppercase tracking-widest cursor-pointer shadow-md"
+                                >
+                                    + Añadir
+                                </button>
+                            </div>
+                        </div>
+
+                        {newOrder.items.length > 0 && (
+                            <div className="mt-4 space-y-2 max-h-40 overflow-y-auto pr-2">
+                                {newOrder.items.map(item => (
+                                    <div key={item.id} className="flex justify-between items-center bg-sky-50/30 p-2 rounded-lg border border-sky-100">
+                                        <p className="text-sm font-oswald">
+                                            <span className="font-black text-sky-high">{item.cantidad}x</span> {item.nombre} 
+                                            <span className="text-neutral-400 ml-2">${(item.precio * item.cantidad).toLocaleString()}</span>
+                                        </p>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => removeItemFromOrder(item.id)}
+                                            className="text-red-400 hover:text-red-600 p-1 cursor-pointer"
+                                        >
+                                            <Trash size={18} />
+                                        </button>
+                                    </div>
+                                ))}
+                                <div className="pt-2 text-right">
+                                    <p className="font-black font-oswald text-lg">Subtotal: <span className="text-sky-high">${newOrder.items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0).toLocaleString()}</span></p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <button type="submit" className="w-full bg-black text-white font-black p-4 rounded-xl hover:opacity-90 cursor-pointer font-oswald uppercase tracking-widest shadow-lg shadow-black/10 transition-all active:scale-95">
+                        Registrar Pedido en el día
+                    </button>
+                </form>
+            </div>
+
+            <div className="space-y-4">
+                <h3 className="text-2xl font-oswald font-black uppercase tracking-tighter text-neutral-400">Ventas Registradas Hoy</h3>
+                <div className="grid grid-cols-1 gap-4">
+                    {orders.map((order) => (
+                        <div key={order.id} className="p-6 bg-white border border-neutral-100 rounded-2xl shadow-sm hover:shadow-md transition-all group">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 className="text-xl font-black font-oswald uppercase text-neutral-800">{order.cliente}</h4>
+                                    <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">{order.fecha}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-2xl font-black font-oswald text-cheese">${order.total.toLocaleString()}</p>
+                                    <button onClick={() => removeOrder(order.id)} className="text-neutral-200 hover:text-red-600 transition-all mt-2 p-2 cursor-pointer">
+                                        <Trash size={24} />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {order.items.map((item, i) => (
+                                    <span key={i} className="px-3 py-1 bg-neutral-100 rounded-full text-[10px] font-black uppercase text-neutral-500">
+                                        {item.cantidad} {item.nombre}
+                                    </span>
+                                ))}
+                            </div>
+                            {order.nota && (
+                                <p className="mt-3 p-3 bg-cheese/5 text-neutral-600 text-xs rounded-xl italic border-l-4 border-cheese leading-relaxed">
+                                    "{order.nota}"
+                                </p>
+                            )}
+                        </div>
+                    ))}
+
+                    {orders.length === 0 && (
+                        <div className="py-16 text-center border-2 border-dashed border-neutral-100 rounded-3xl">
+                             <p className="font-oswald font-black text-neutral-200 uppercase tracking-widest text-xl">No hay ventas registradas aún</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {orders.length > 0 && (
+                <div className="pt-10 border-t border-neutral-100 flex flex-col items-center gap-4">
+                    <div className="text-center">
+                        <p className="text-sm font-black text-neutral-400 uppercase tracking-widest">Total del Día</p>
+                        <p className="text-7xl font-black font-oswald text-black">${orders.reduce((sum, o) => sum + o.total, 0).toLocaleString()}</p>
+                    </div>
+                    <button 
+                        onClick={finalizeDay}
+                        className="bg-green-600 hover:bg-green-700 text-white px-16 py-6 rounded-2xl font-black font-oswald uppercase tracking-widest shadow-2xl shadow-green-900/30 transition-all hover:scale-105 active:scale-95 cursor-pointer border-b-4 border-green-800 flex items-center gap-3"
+                    >
+                        Finalizar Día
+                    </button>
+                    <p className="text-[10px] text-neutral-300 uppercase font-black tracking-widest">Esta acción actualizará el archivo de ventas permanentes</p>
+                </div>
+            )}
+        </div>
+    );
 };
 
 const AdminCategory = ({ category, items, onAdd, onUpdate, onRemove }) => {

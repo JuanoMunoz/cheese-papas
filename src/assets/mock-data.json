@@ -171,5 +171,11 @@
             "precio": 3900,
             "img": "colombiana400.webp"
         }
+    ],
+    "ventas_diarias": [
+        {
+            "fecha": "28/3/2026",
+            "total": 52000
+        }
     ]
 }
