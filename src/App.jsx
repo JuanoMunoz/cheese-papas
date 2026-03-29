@@ -1,7 +1,7 @@
 import "./App.css";
 import Modal from "./components/Modal";
 import FloatButton from "./components/FloatButton";
-import data from "./assets/mock-data.json";
+// import data from "./assets/mock-data.json";
 import { useEffect, useState } from "react";
 import { Cart, CartHeading, Close, Trash, House, Location } from "./components/SVG";
 import Header from "./components/Header";
@@ -12,6 +12,8 @@ import toast from "react-simple-toasts";
 import Login from "./components/Login";
 import Admin from "./components/Admin";
 function App() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isFriesSection, setIsFriesSection] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -112,6 +114,20 @@ function App() {
     setIsLoggedIn(false);
     localStorage.removeItem("isAdmin");
     setCurrentView("home");
+    refreshData();
+  };
+
+  const refreshData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/get-data");
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error("Error refreshing data", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getCurrentLocation = () => {
@@ -169,11 +185,37 @@ function App() {
     setActiveProduct(product);
   };
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/get-data");
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        console.error("Error loading data from API", error);
+        // data will remain null or could be set to a safe empty object
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     setTotal(
       cart.reduce((partialSum, product) => partialSum + product.total, 0)
     );
   }, [cart]);
+
+  if (loading || !data) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-black">
+        <h2 className="text-white font-oswald text-3xl animate-pulse">
+            {loading ? "CARGANDO..." : "CONECTANDO CON LA BASE DE DATOS..."}
+        </h2>
+      </div>
+    );
+  }
 
   if (currentView === "login") {
     return (
@@ -190,7 +232,10 @@ function App() {
       <Admin
         initialData={data}
         onLogout={handleLogout}
-        onBack={() => setCurrentView("home")}
+        onBack={() => {
+            setCurrentView("home");
+            refreshData();
+        }}
       />
     );
   }
