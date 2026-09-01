@@ -3,21 +3,21 @@
         {
             "id": 1,
             "nombre": "Las de la casa",
-            "precio": 28000,
+            "precio": 32000,
             "descripcion": "Papas, queso mozarella, salchichas, carne tipo pulled pork, pollo, guacamole, tocineta caramelizada y salsas a tu elección. Ideal para dos personas",
             "img": "/mandi1.jpg"
         },
         {
             "id": 2,
             "nombre": "Las de la casa (personal) ",
-            "precio": 15000,
+            "precio": 18000,
             "descripcion": "Papas, salchichas, carne tipo pulled pork, pollo, guacamole, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi2.jpg"
         },
         {
             "id": 3,
             "nombre": "Las rancheritas",
-            "precio": 15000,
+            "precio": 18000,
             "descripcion": "Papas, queso mozarella, salchichas, maicitos, tocineta caramelizada y salsas a tu elección.",
             "img": "/mandi3.jpg"
         },
@@ -66,14 +66,14 @@
         {
             "id": 10,
             "nombre": "Las costeñas (personal)",
-            "precio": 16000,
+            "precio": 19000,
             "descripcion": "Papá, lechuga, chorizo, butifarra, pechuga salteada, salchicha, queso costeño, ripio de papa, maicitos y salsas a tu elección.",
             "img": "/mandi9.jpg"
         },
         {
             "id": 11,
             "nombre": "Las costeñas",
-            "precio": 32000,
+            "precio": 35000,
             "descripcion": "Papá, lechuga, chorizo, butifarra, pechuga salteada, salchicha, queso costeño, ripio de papa, maicitos y salsas a tu elección. Ideal para 2",
             "img": "/mandi8.jpg"
         }
